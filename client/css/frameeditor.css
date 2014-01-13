@@ -1,0 +1,56 @@
+.frame{
+    padding: 5px;   
+}
+
+.frame .led{
+    height: 30px;
+    border: solid 1px black;
+}
+
+.frame .led.red{
+    background-color: red;   
+}
+
+.frame .led.red.on{
+    background-color: red;   
+}
+
+.frame .led.blue{
+    background-color: blue;   
+}
+
+.frame .led.blue.on{
+    background-color: blue;   
+}
+
+.frame .led.green{
+    background-color: green;   
+}
+
+.frame .led.green.on{
+    background-color: green;   
+}
+
+.frame .led.yellow{
+    background-color: yellow;   
+}
+
+.frame .led.yellow.on{
+    background-color: yellow;   
+}
+
+.frame .led.white{
+    background-color: white;   
+}
+
+.frame .led.white.on{
+    background-color: white;   
+}
+
+.frame .led.pink{
+    background-color: pink;   
+}
+
+.frame .led.pink.on{
+    background-color: pink;   
+}

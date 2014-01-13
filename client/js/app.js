@@ -1,0 +1,1 @@
+var blinkApp = angular.module('blinkApp', []);

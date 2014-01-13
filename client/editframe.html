@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" ng-app="blinkApp">
+  <head>
+    <title>Chat Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/frameeditor.css">
+    <style>
+      body {
+        padding-top: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" ng-controller="FrameEditorController">
+        <div class="page-header">
+            <h1>Create New Blinks!
+        </div>
+        <div class="btn-group">
+          <button class="btn" ng-click="create()">New</button>
+          <button class="btn" ng-click="send()">Send</button>
+          <button class="btn" ng-click="save()">Save</button>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <div class="frame row" ng-repeat="frame in frames">
+                    <div class="led red span1">
+                        <input type="checkbox" ng-model="frame.red" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led blue span1">
+                        <input type="checkbox" ng-model="frame.blue" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led green span1">
+                        <input type="checkbox" ng-model="frame.green" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led yellow span1">
+                        <input type="checkbox" ng-model="frame.yellow" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led white span1">
+                        <input type="checkbox" ng-model="frame.white" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led pink span1">
+                        <input type="checkbox" ng-model="frame.pink" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="span3">
+                        <button class="btn" type="button" ng-click="addFrame(frame)"><i class="icon-plus"></i></button>
+                        <button class="btn" type="button" ng-click="removeFrame(frame)"><i class="icon-minus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/services/socket.js"></script>
+    <script src="/js/controllers/frameeditorctrl.js"></script>
+  </body>
+</html>
