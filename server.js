@@ -7,6 +7,8 @@ var querystring = require('querystring');
 var https = require('https');
 var http = require('http');
 var path = require('path');
+var _ = require('underscore');
+var twitter = require('ntwitter');
 
 var async = require('async');
 var socketio = require('socket.io');
@@ -26,95 +28,286 @@ router.use(express.static(path.resolve(__dirname, 'client')));
 var messages = [];
 var sockets = [];
 
-io.on('connection', function (socket) {
-    messages.forEach(function (data) {
-      socket.emit('message', data);
+io.on('connection', function(socket) {
+    messages.forEach(function(data) {
+        socket.emit('message', data);
     });
 
     sockets.push(socket);
 
-    socket.on('disconnect', function () {
-      sockets.splice(sockets.indexOf(socket), 1);
-      updateRoster();
-    });
-
-    socket.on('message', function (msg) {
-      var text = String(msg || '');
-
-      if (!text)
-        return;
-
-      socket.get('name', function (err, name) {
-        var data = {
-          name: name,
-          text: text
-        };
-
-        broadcast('message', data);
-        messages.push(data);
-      });
-    });
-
-    socket.on('identify', function (name) {
-      socket.set('name', String(name || 'Anonymous'), function (err) {
+    socket.on('disconnect', function() {
+        sockets.splice(sockets.indexOf(socket), 1);
         updateRoster();
-      });
-    });
-    
-    socket.on('saveFrames', function (frames) {
-        
     });
 
-    socket.on('sendFrames', function (frames) {
-        console.log("received frames: " + frames.length);
+    socket.on('message', function(msg) {
+        var text = String(msg || '');
 
-        var post_data = JSON.stringify({buffer: frames});
-        console.log(post_data);
-        
-      // An object of options to indicate where to post to
-      var post_options = {
-          host: 'agent.electricimp.com',
-          port: '443',
-          path: '/W2IM5eP3Ct7l',
-          method: 'POST',
-          headers: {
-              'Content-Length': post_data.length
-          }
-      };
-    
+        if (!text) return;
+
+        socket.get('name', function(err, name) {
+            var data = {
+                name: name,
+                text: text
+            };
+
+            broadcast('message', data);
+            messages.push(data);
+        });
+    });
+
+    socket.on('identify', function(name) {
+        socket.set('name', String(name || 'Anonymous'), function(err) {
+            updateRoster();
+        });
+    });
+
+    socket.on('saveFrames', function(frames) {});
+
+    socket.on('sendFrames', function(frames) {
+        sendFrames(frames);
+    });
+
+});
+
+function sendFrames(frames) {
+    console.log("received frames: " + frames.length);
+
+    var post_data = JSON.stringify({
+        buffer: frames
+    });
+    console.log(post_data);
+
+    // An object of options to indicate where to post to
+    var post_options = {
+        host: 'agent.electricimp.com',
+        port: '443',
+        path: '/W2IM5eP3Ct7l',
+        method: 'POST',
+        headers: {
+            'Content-Length': post_data.length
+        }
+    };
+
     console.log("Post options set");
-    
-      // Set up the request
-      var post_req = https.request(post_options);
-    
+
+    // Set up the request
+    var post_req = https.request(post_options);
+
     console.log("Request Created");
-      // post the data
-      post_req.write(post_data);
-      console.log("Request Writtern");
-      post_req.end();
-      console.log("Rqeuest Ended");
-    });
-  });
+    // post the data
+    post_req.write(post_data);
+    console.log("Request Writtern");
+    post_req.end();
+    console.log("Rqeuest Ended");
+
+}
 
 function updateRoster() {
-  async.map(
+    async.map(
     sockets,
-    function (socket, callback) {
-      socket.get('name', callback);
+
+    function(socket, callback) {
+        socket.get('name', callback);
     },
-    function (err, names) {
-      broadcast('roster', names);
-    }
-  );
+
+    function(err, names) {
+        broadcast('roster', names);
+    });
 }
 
 function broadcast(event, data) {
-  sockets.forEach(function (socket) {
-    socket.emit(event, data);
-  });
+    sockets.forEach(function(socket) {
+        socket.emit(event, data);
+    });
 }
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
-  var addr = server.address();
-  console.log("Chat server listening at", addr.address + ":" + addr.port);
+server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {
+    var addr = server.address();
+    console.log("Chat server listening at", addr.address + ":" + addr.port);
 });
+
+function startTwitterStream() {
+    // Twitter symbols array
+    var watchSymbols = ['android'];
+
+    //This structure will keep the total number of tweets received and a map of all the symbols and how many tweets received of that symbol
+    var watchList = {
+        total: 0,
+        symbols: {}
+    };
+
+    //Set the watch symbols to zero.
+    _.each(watchSymbols, function(v) {
+        watchList.symbols[v] = 0;
+    });
+
+    //Instantiate the twitter component
+    //You will need to get your own key. Don't worry, it's free. But I cannot provide you one
+    //since it will instantiate a connection on my behalf and will drop all other streaming connections.
+    //Check out: https://dev.twitter.com/
+    var t = new twitter({
+        consumer_key: 'w7SoGcpmbtV1h51MocTWDQ', // <--- FILL ME IN
+        consumer_secret: 'Dd4AKiNmg3X4PmcgiUswPb0ey0Zm076I5FBx2qPRo', // <--- FILL ME IN
+        access_token_key: '15485073-M1Z9b31zVf6wbjvOGLmwKLyMjPZS1Q4lmuKPItW3I', // <--- FILL ME IN
+        access_token_secret: 'HIleJoa9rSbHCwLW1A6Q2pCWBMNENk0p8ysWj4rDldcij' // <--- FILL ME IN
+    });
+    console.log("Twitter client created");
+
+    //Tell the twitter API to filter on the watchSymbols 
+    t.stream('statuses/filter', {
+        track: watchSymbols
+    }, function(stream) {
+
+        console.log("Setting up data receive handler");
+
+        //We have a connection. Now watch the 'data' event for incomming tweets.
+        stream.on('data', function(tweet) {
+
+            //This variable is used to indicate whether a symbol was actually mentioned.
+            //Since twitter doesnt why the tweet was forwarded we have to search through the text
+            //and determine which symbol it was ment for.Sometimes we can 't tell, in which case we don't
+            //want to increment the total counter...
+            var claimed = false;
+
+            //Make sure it was a valid tweet
+            if (tweet.text !== undefined) {
+
+                //We're gunna do some indexOf comparisons and we want it to be case agnostic.
+                var text = tweet.text.toLowerCase();
+
+                //Go through every symbol and see if it was mentioned. If so, increment its counter and
+                //set the 'claimed' variable to true to indicate something was mentioned so we can increment
+                //the 'total' counter!
+                _.each(watchSymbols, function(v) {
+                    if (text.indexOf(v.toLowerCase()) !== -1) {
+                        watchList.symbols[v]++;
+                        claimed = true;
+                    }
+                });
+
+                //If something was mentioned, increment the total counter and send the update to all the clients
+                if (claimed) {
+                    //Increment total
+                    watchList.total++;
+                    
+                    if (watchList.total % 100 === 0)
+                        console.log(watchList.total + " hashtags received");
+
+                    //Send to all the clients
+                    //sockets.sockets.emit('data', watchList);
+                    if (watchList.total % 1000 === 0) {
+                        var frames = [{
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "on",
+                            "white": "on",
+                            "pink": "on",
+                            "time": 0.1
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "on",
+                            "white": "on",
+                            "pink": "off",
+                            "time": 0.2
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "on",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.3
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "off",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.4
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "off",
+                            "yellow": "off",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.5
+                        }, {
+                            "red": "on",
+                            "blue": "off",
+                            "green": "off",
+                            "yellow": "off",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.6
+                        }, {
+                            "red": "off",
+                            "blue": "off",
+                            "green": "off",
+                            "yellow": "off",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.7
+                        }, {
+                            "red": "on",
+                            "blue": "off",
+                            "green": "off",
+                            "yellow": "off",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.6
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "off",
+                            "yellow": "off",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.5
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "off",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.4
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "on",
+                            "white": "off",
+                            "pink": "off",
+                            "time": 0.3
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "on",
+                            "white": "on",
+                            "pink": "off",
+                            "time": 0.2
+                        }, {
+                            "red": "on",
+                            "blue": "on",
+                            "green": "on",
+                            "yellow": "on",
+                            "white": "on",
+                            "pink": "on",
+                            "time": 0.1
+                        }];
+                        sendFrames(frames);
+                    }
+                }
+            }
+        });
+    });
+}
+
+startTwitterStream();
