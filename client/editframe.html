@@ -25,23 +25,23 @@
         <div class="row">
             <div class="span12">
                 <div class="frame row" ng-repeat="frame in frames">
+                    <div class="led purple span1">
+                        <input type="checkbox" ng-model="frame.purple" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led pink span1">
+                        <input type="checkbox" ng-model="frame.pink" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led white span1">
+                        <input type="checkbox" ng-model="frame.white" ng-true-value="on" ng-false-value="off" />
+                    </div>
+                    <div class="led yellow span1">
+                        <input type="checkbox" ng-model="frame.yellow" ng-true-value="on" ng-false-value="off" />
+                    </div>
                     <div class="led red span1">
                         <input type="checkbox" ng-model="frame.red" ng-true-value="on" ng-false-value="off" />
                     </div>
                     <div class="led blue span1">
                         <input type="checkbox" ng-model="frame.blue" ng-true-value="on" ng-false-value="off" />
-                    </div>
-                    <div class="led green span1">
-                        <input type="checkbox" ng-model="frame.green" ng-true-value="on" ng-false-value="off" />
-                    </div>
-                    <div class="led yellow span1">
-                        <input type="checkbox" ng-model="frame.yellow" ng-true-value="on" ng-false-value="off" />
-                    </div>
-                    <div class="led white span1">
-                        <input type="checkbox" ng-model="frame.white" ng-true-value="on" ng-false-value="off" />
-                    </div>
-                    <div class="led pink span1">
-                        <input type="checkbox" ng-model="frame.pink" ng-true-value="on" ng-false-value="off" />
                     </div>
                     <div class="span3">
                         <button class="btn" type="button" ng-click="addFrame(frame)"><i class="icon-plus"></i></button>
