@@ -23,12 +23,12 @@
     background-color: blue;   
 }
 
-.frame .led.green{
-    background-color: green;   
+.frame .led.purple{
+    background-color: purple;   
 }
 
-.frame .led.green.on{
-    background-color: green;   
+.frame .led.purple.on{
+    background-color: purple;   
 }
 
 .frame .led.yellow{
