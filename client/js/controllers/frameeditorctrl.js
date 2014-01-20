@@ -1,11 +1,11 @@
 function FrameEditorController($scope, socket) {
     
     $scope.frames = [
-        {purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1.0}];
+        {purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1}];
     
     $scope.addFrame = function(frame){
         var index = $scope.frames.indexOf(frame) + 1;
-        $scope.frames.splice(index, 0, {purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1.0});
+        $scope.frames.splice(index, 0, {purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1});
     }
     
     $scope.removeFrame = function(frame){
@@ -16,7 +16,7 @@ function FrameEditorController($scope, socket) {
     }
     
     $scope.create = function(){
-        $scope.frames = [{purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1.0}];
+        $scope.frames = [{purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1}];
     }
     
     $scope.save = function(){

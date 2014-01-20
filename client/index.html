@@ -44,10 +44,13 @@
                         <div class="hint">&nbsp;</div>
                     </div>
                     <div class="span5">
-                        <button class="btn" type="button" ng-click="addFrame(frame)">Add <i class="icon-arrow-down"></i></button>
-                        <button class="btn" type="button" ng-click="removeFrame(frame)"><i class="icon-remove-sign"></i></button>
-                        <input type="tel" pattern="[0-9]*" />
-                    </div>
+                        <div class="form-horizontal">
+                            <button class="btn" type="button" ng-click="addFrame(frame)">Add <i class="icon-arrow-down"></i></button>
+                            <button class="btn" type="button" ng-click="removeFrame(frame)"><i class="icon-remove-sign"></i></button>
+                            <input type=text class="input-mini" readonly ng-model="frame.time"/>
+                            <input type="range" data-highlight="true" min="1" max="10" ng-model="frame.time">
+    </div>
+</div>
                 </div>
             </div>
         </div>
