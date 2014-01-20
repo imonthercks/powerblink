@@ -3,11 +3,18 @@
 }
 
 .frame .led{
+    max-width: 200px;
     height: 30px;
     border: solid 1px black;
+    background-color: lightgray;
 }
 
-.frame .led.red{
+.frame .hint{
+    max-width: 5px;
+    height: 30px;
+}
+
+.frame .led.red .hint{
     background-color: red;   
 }
 
@@ -15,7 +22,7 @@
     background-color: red;   
 }
 
-.frame .led.blue{
+.frame .led.blue .hint{
     background-color: blue;   
 }
 
@@ -23,15 +30,15 @@
     background-color: blue;   
 }
 
-.frame .led.purple{
-    background-color: purple;   
+.frame .led.purple .hint {
+    background-color: purple;    
 }
 
 .frame .led.purple.on{
     background-color: purple;   
 }
 
-.frame .led.yellow{
+.frame .led.yellow .hint{
     background-color: yellow;   
 }
 
@@ -39,7 +46,7 @@
     background-color: yellow;   
 }
 
-.frame .led.white{
+.frame .led.white .hint{
     background-color: white;   
 }
 
@@ -47,7 +54,7 @@
     background-color: white;   
 }
 
-.frame .led.pink{
+.frame .led.pink .hint{
     background-color: pink;   
 }
 

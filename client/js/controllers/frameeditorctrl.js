@@ -26,4 +26,8 @@ function FrameEditorController($scope, socket) {
     $scope.send = function(){
         socket.emit('sendFrames', $scope.frames);
     }
+    
+    $scope.toggle = function(frame, color){
+        frame[color] = frame[color] == 'on' ? 'off' : 'on';
+    }
 } 

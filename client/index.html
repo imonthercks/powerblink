@@ -25,27 +25,28 @@
         <div class="row">
             <div class="span12">
                 <div class="frame row" ng-repeat="frame in frames">
-                    <div class="led purple span1">
-                        <input type="checkbox" ng-model="frame.purple" ng-true-value="on" ng-false-value="off" />
+                    <div class="led purple span1 ng-class:frame.purple" ng-click='toggle(frame, "purple")'>
+                        <div class="hint">&nbsp;</div>
                     </div>
-                    <div class="led pink span1">
-                        <input type="checkbox" ng-model="frame.pink" ng-true-value="on" ng-false-value="off" />
+                    <div class="led pink span1 ng-class:frame.pink" ng-click='toggle(frame, "pink")'>
+                        <div class="hint">&nbsp;</div>
                     </div>
-                    <div class="led white span1">
-                        <input type="checkbox" ng-model="frame.white" ng-true-value="on" ng-false-value="off" />
+                    <div class="led white span1 ng-class:frame.white" ng-click='toggle(frame, "white")'>
+                        <div class="hint">&nbsp;</div>
                     </div>
-                    <div class="led yellow span1">
-                        <input type="checkbox" ng-model="frame.yellow" ng-true-value="on" ng-false-value="off" />
+                    <div class="led yellow span1 ng-class:frame.yellow" ng-click='toggle(frame, "yellow")'>
+                        <div class="hint">&nbsp;</div>
                     </div>
-                    <div class="led red span1">
-                        <input type="checkbox" ng-model="frame.red" ng-true-value="on" ng-false-value="off" />
+                    <div class="led red span1 ng-class:frame.red" ng-click='toggle(frame, "red")'>
+                        <div class="hint">&nbsp;</div>
                     </div>
-                    <div class="led blue span1">
-                        <input type="checkbox" ng-model="frame.blue" ng-true-value="on" ng-false-value="off" />
+                    <div class="led blue span1 ng-class:frame.blue" ng-click='toggle(frame, "blue")'>
+                        <div class="hint">&nbsp;</div>
                     </div>
-                    <div class="span3">
-                        <button class="btn" type="button" ng-click="addFrame(frame)"><i class="icon-plus"></i></button>
-                        <button class="btn" type="button" ng-click="removeFrame(frame)"><i class="icon-minus"></i></button>
+                    <div class="span5">
+                        <button class="btn" type="button" ng-click="addFrame(frame)">Add <i class="icon-arrow-down"></i></button>
+                        <button class="btn" type="button" ng-click="removeFrame(frame)"><i class="icon-remove-sign"></i></button>
+                        <input type="tel" pattern="[0-9]*" />
                     </div>
                 </div>
             </div>
