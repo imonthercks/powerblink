@@ -73,6 +73,8 @@ io.on('connection', function(socket) {
 function sendFrames(frames) {
     console.log("received frames: " + frames.length);
 
+    _.each(frames, function(item){item.time = item.time * 0.1;});
+    
     var post_data = JSON.stringify({
         buffer: frames
     });
@@ -160,6 +162,7 @@ function startTwitterStream() {
     }, function(stream) {
 
         console.log("Setting up data receive handler");
+        
 
         //We have a connection. Now watch the 'data' event for incomming tweets.
         stream.on('data', function(tweet) {
