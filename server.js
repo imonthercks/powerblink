@@ -198,108 +198,108 @@ function startTwitterStream() {
                     //sockets.sockets.emit('data', watchList);
                     if (watchList.total % 100 === 0) {
                         var frames = [{
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "on",
+                            "yellow": "on",
                             "red": "on",
                             "blue": "on",
-                            "green": "on",
-                            "yellow": "on",
-                            "white": "on",
-                            "pink": "on",
                             "time": 0.1
                         }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "on",
-                            "yellow": "on",
+                            "purple": "on",
+                            "pink": "on",
                             "white": "on",
-                            "pink": "off",
-                            "time": 0.2
-                        }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "on",
                             "yellow": "on",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.3
-                        }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "on",
-                            "yellow": "off",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.4
-                        }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "off",
-                            "yellow": "off",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.5
-                        }, {
                             "red": "on",
                             "blue": "off",
-                            "green": "off",
-                            "yellow": "off",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.6
+                            "time": 0.2
                         }, {
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "on",
+                            "yellow": "on",
                             "red": "off",
                             "blue": "off",
-                            "green": "off",
-                            "yellow": "off",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.7
-                        }, {
-                            "red": "on",
-                            "blue": "off",
-                            "green": "off",
-                            "yellow": "off",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.6
-                        }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "off",
-                            "yellow": "off",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.5
-                        }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "on",
-                            "yellow": "off",
-                            "white": "off",
-                            "pink": "off",
-                            "time": 0.4
-                        }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "on",
-                            "yellow": "on",
-                            "white": "off",
-                            "pink": "off",
                             "time": 0.3
                         }, {
-                            "red": "on",
-                            "blue": "on",
-                            "green": "on",
-                            "yellow": "on",
+                            "purple": "on",
+                            "pink": "on",
                             "white": "on",
+                            "yellow": "off",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.4
+                        }, {
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "off",
+                            "yellow": "off",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.5
+                        }, {
+                            "purple": "on",
                             "pink": "off",
+                            "white": "off",
+                            "yellow": "off",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.6
+                        }, {
+                            "purple": "off",
+                            "pink": "off",
+                            "white": "off",
+                            "yellow": "off",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.7
+                        }, {
+                            "purple": "on",
+                            "pink": "off",
+                            "white": "off",
+                            "yellow": "off",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.6
+                        }, {
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "off",
+                            "yellow": "off",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.5
+                        }, {
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "on",
+                            "yellow": "off",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.4
+                        }, {
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "on",
+                            "yellow": "on",
+                            "red": "off",
+                            "blue": "off",
+                            "time": 0.3
+                        }, {
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "on",
+                            "yellow": "on",
+                            "red": "on",
+                            "blue": "off",
                             "time": 0.2
                         }, {
+                            "purple": "on",
+                            "pink": "on",
+                            "white": "on",
+                            "yellow": "on",
                             "red": "on",
                             "blue": "on",
-                            "green": "on",
-                            "yellow": "on",
-                            "white": "on",
-                            "pink": "on",
                             "time": 0.1
                         }];
                         sendFrames(frames);
