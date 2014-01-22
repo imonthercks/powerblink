@@ -10,9 +10,19 @@ var path = require('path');
 var _ = require('underscore');
 var twitter = require('ntwitter');
 
+var redis = require('redis');
+
 var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
+
+
+var client = redis.createClient(16379, process.env.IP);
+
+client.on("error", function (err) {
+        console.log("Error " + err);
+    });
+
 
 //
 // ## SimpleServer `SimpleServer(obj)`
@@ -62,7 +72,9 @@ io.on('connection', function(socket) {
         });
     });
 
-    socket.on('saveFrames', function(frames) {});
+    socket.on('saveFrames', function(blink) {
+        client.set(blink.name, blink.frames);
+    });
 
     socket.on('sendFrames', function(frames) {
         sendFrames(frames);

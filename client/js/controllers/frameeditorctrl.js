@@ -20,7 +20,16 @@ function FrameEditorController($scope, socket) {
     }
     
     $scope.save = function(){
-        socket.emit('saveFrames', $scope.frames);
+        $scope.nameFormVisible = true; 
+    }
+    
+    $scope.persist = function(){
+        socket.emit('saveFrames', {name: $scope.blinkName, frames: $scope.frames});
+        $scope.nameFormVisible = false;
+    }
+    
+    $scope.cancelNameForm = function(){
+        $scope.nameFormVisible = false;
     }
     
     $scope.send = function(){

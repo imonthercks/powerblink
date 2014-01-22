@@ -22,6 +22,9 @@
           <button class="btn" ng-click="send()">Send</button>
           <button class="btn" ng-click="save()">Save</button>
         </div>
+        <div ng-show="nameFormVisible">
+            <input type="text" ng-model="blinkName" required /><button type="button" ng-click="persist()">OK</button><button type="button" ng-click="cancelNameForm()" >Cancel</button>
+        </div>
         <div class="row">
             <div class="span12">
                 <div class="frame row" ng-repeat="frame in frames">
