@@ -10,14 +10,18 @@ var path = require('path');
 var _ = require('underscore');
 var twitter = require('ntwitter');
 
-var redis = require('redis');
-
 var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
 
+var client;
 
-var client = redis.createClient(16379, process.env.IP);
+if (process.env.REDISTOGO_URL){
+    client = require('redis-url').connect(process.env.REDISTOGO_URL);
+} else {
+    var redis = require('redis');
+    client = redis.createClient(16379, process.env.IP);
+}
 
 client.on("error", function (err) {
         console.log("Error " + err);
