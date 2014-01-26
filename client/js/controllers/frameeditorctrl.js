@@ -1,5 +1,6 @@
 function FrameEditorController($scope, $resource, socket) {
     $scope.blinkState = 'new';
+    $scope.blinkNames = [];
     $scope.frames = [
         {purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1}];
     
