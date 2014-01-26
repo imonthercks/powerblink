@@ -1,4 +1,4 @@
-function FrameEditorController($scope, socket) {
+function FrameEditorController($scope, $resource, socket) {
     $scope.blinkState = 'new';
     $scope.frames = [
         {purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1}];
@@ -22,6 +22,7 @@ function FrameEditorController($scope, socket) {
             return;
         
         $scope.blinkState = 'new';
+        $scope.blinkName = '';
         $scope.frames = [{purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1}];
     }
     
@@ -30,7 +31,29 @@ function FrameEditorController($scope, socket) {
     
     $scope.persist = function(){
         socket.emit('saveFrames', {name: $scope.blinkName, frames: $scope.frames});
+        $scope.blinkNames.push($scope.blinkName);
         $scope.blinkState = 'pristine';
+    }
+    
+    var Blink = $resource('/blink/:id', {}, {'get': {method: 'GET', isArray: true}});
+        
+    $scope.load = function(blinkName){
+        var blink = Blink.get({id:blinkName});
+        blink.$promise.then(function(data){
+            $scope.blinkName = blinkName;
+            $scope.frames = data;
+        });
+        
+        $scope.blinkState = 'pristine';
+    }
+    
+    $scope.remove = function(blinkName){
+        if (!window.confirm("Are you sure you want to delete blink named '" + blinkName + "'?")) return;
+        var blink = Blink.delete({id:blinkName});
+        blink.$promise.then(function(){
+            var index = $scope.blinkNames.indexOf(blinkName);
+            if (index > -1) $scope.blinkNames.splice(index, 1);
+        })
     }
     
     $scope.cancelNameForm = function(){
@@ -44,6 +67,10 @@ function FrameEditorController($scope, socket) {
     $scope.toggle = function(frame, color){
         $scope.blinkState = 'dirty';
         frame[color] = frame[color] == 'on' ? 'off' : 'on';
+    }
+    
+    $scope.setDirty = function(){
+        $scope.blinkState = 'dirty';    
     }
     
     socket.on('blinkNames', function (blinkNames) {

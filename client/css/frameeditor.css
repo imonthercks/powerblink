@@ -1,3 +1,8 @@
+/* Angular Bootstrap hack for not allowing # in href */
+.nav, .pagination, .carousel, .panel-title a { 
+    cursor: pointer; 
+    }
+
 .frame{
     padding: 5px;   
 }

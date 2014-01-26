@@ -1,1 +1,1 @@
-var blinkApp = angular.module('blinkApp', []);
+var blinkApp = angular.module('blinkApp', ['ngResource']);

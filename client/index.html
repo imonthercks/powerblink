@@ -18,15 +18,20 @@
             <h1>Create New Blinks!
         </div>
         <div class="btn-group">
-          <button class="btn" ng-disabled="blinkState=='save'" ng-click="create()">New</button>
-          <button class="btn" ng-click="send()">Send</button>
+          <button class="btn" ng-disabled="blinkState=='save'||blinkState=='new'" ng-click="create()">New</button>
+          <button class="btn" ng-disabled="blinkState=='new'" ng-click="send()">Send</button>
           <button class="btn" ng-disabled="blinkState!='dirty'" ng-click="blinkState='save'">Save</button>
-          <button class="btn" ng-disabled="blinkState=='dirty'||blinkState=='save'" ng-click="blinkState='open'">Open Saved Blink</button>
+          <button class="btn" ng-disabled="blinkState=='dirty'||blinkState=='save'||blinkNames.length<=0" ng-click="blinkState='open'">Open Saved Blink</button>
           {{blinkState}}
         </div>
         <div id="blinkList" ng-show="blinkState=='open'"> 
-        <ul class="nav nav-pills nav-stacked">
-            <li ng-repeat="blinkName in blinkNames"><a href="#">{{blinkName}}</a></li>
+        <ul>
+            <li ng-repeat="blinkName in blinkNames">
+                <div class="btn-group" style="width: 300px;">   
+                    <button class="btn" style="width:200px;" ng-click="load(blinkName)">{{blinkName}}</button>
+                    <button class="btn" type="button" ng-click="remove(blinkName)"><i class="icon-remove-sign"></i></button>
+                </div>
+            </li>
         </ul>
         </div>
         <div ng-show="blinkState=='save'">
@@ -63,7 +68,7 @@
                             <button class="btn" type="button" ng-click="addFrame(frame)">Add <i class="icon-arrow-down"></i></button>
                             <button class="btn" type="button" ng-click="removeFrame(frame)"><i class="icon-remove-sign"></i></button>
                             <input type=text class="input-mini" readonly ng-model="frame.time"/>
-                            <input type="range" data-highlight="true" min="1" max="10" ng-model="frame.time">
+                            <input type="range" data-highlight="true" min="1" max="10" ng-model="frame.time" ng-change="setDirty()">
     </div>
 </div>
                 </div>
@@ -73,7 +78,8 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular-resource.min.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/services/socket.js"></script>
     <script src="/js/underscore.js"></script>

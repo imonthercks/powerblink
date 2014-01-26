@@ -35,6 +35,25 @@ var server = http.createServer(router);
 var io = socketio.listen(server);
 
 router.use(express.static(path.resolve(__dirname, 'client')));
+
+router.get('/blink/:id', function(req, res){
+   var blinkName = req.params.id;
+   
+   client.get(blinkName, function(err, resp){
+      res.send(JSON.parse(resp)); 
+   });
+});
+
+router.delete('/blink/:id', function(req, res){
+    var blinkName = req.params.id;
+    
+    client.del(blinkName, function(err){
+        if (err) return console.log(err);
+        
+        res.send('');
+    })
+})
+
 var messages = [];
 var sockets = [];
 
@@ -79,7 +98,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('saveFrames', function(blink) {
-        client.set(blink.name, blink.frames);
+        client.set(blink.name, JSON.stringify(blink.frames));
     });
 
     socket.on('sendFrames', function(frames) {
