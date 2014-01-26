@@ -43,6 +43,12 @@ io.on('connection', function(socket) {
         socket.emit('message', data);
     });
 
+    client.keys('*', function (err, keys) {
+      if (err) return console.log(err);
+    
+        socket.emit('blinkNames', keys);
+    });
+    
     sockets.push(socket);
 
     socket.on('disconnect', function() {

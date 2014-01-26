@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" ng-app="blinkApp">
   <head>
-    <title>Chat Example</title>
+    <title>Blinking About You!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
@@ -18,12 +18,24 @@
             <h1>Create New Blinks!
         </div>
         <div class="btn-group">
-          <button class="btn" ng-click="create()">New</button>
+          <button class="btn" ng-disabled="blinkState=='save'" ng-click="create()">New</button>
           <button class="btn" ng-click="send()">Send</button>
-          <button class="btn" ng-click="save()">Save</button>
+          <button class="btn" ng-disabled="blinkState!='dirty'" ng-click="blinkState='save'">Save</button>
+          <button class="btn" ng-disabled="blinkState=='dirty'||blinkState=='save'" ng-click="blinkState='open'">Open Saved Blink</button>
+          {{blinkState}}
         </div>
-        <div ng-show="nameFormVisible">
-            <input type="text" ng-model="blinkName" required /><button type="button" ng-click="persist()">OK</button><button type="button" ng-click="cancelNameForm()" >Cancel</button>
+        <div id="blinkList" ng-show="blinkState=='open'"> 
+        <ul class="nav nav-pills nav-stacked">
+            <li ng-repeat="blinkName in blinkNames"><a href="#">{{blinkName}}</a></li>
+        </ul>
+        </div>
+        <div ng-show="blinkState=='save'">
+            <form name="saveForm" novalidate ng-submit="saveForm.$valid && persist()">
+                <div class="form-horizontal">
+                    <input type="text"name="blinkName" placeholder="Enter Name for you Blink!" ng-model="blinkName" required /><button type="submit" ng-click="submitted=true">OK</button><button type="button" ng-click="cancelNameForm()" >Cancel</button>
+                </div>
+                <div ng-show="submitted && saveForm.blinkName.$error.required" class="alert alert-error">You cannot save a Blink with no name. :)</div>
+            </form>
         </div>
         <div class="row">
             <div class="span12">
@@ -64,6 +76,7 @@
     <script src="/js/angular.min.js"></script>
     <script src="/js/app.js"></script>
     <script src="/js/services/socket.js"></script>
+    <script src="/js/underscore.js"></script>
     <script src="/js/controllers/frameeditorctrl.js"></script>
   </body>
 </html>
