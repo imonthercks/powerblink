@@ -26,7 +26,7 @@
         </div>
         <div id="blinkList" ng-show="blinkState=='open'"> 
         <ul>
-            <li ng-repeat="blinkName in blinkNames">
+            <li ng-repeat="(blinkName, blinks) in blinkNames track by blinkName">
                 <div class="btn-group" style="width: 300px;">   
                     <button class="btn" style="width:200px;" ng-click="load(blinkName)">{{blinkName}}</button>
                     <button class="btn" type="button" ng-click="remove(blinkName)"><i class="icon-remove-sign"></i></button>

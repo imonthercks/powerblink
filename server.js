@@ -43,8 +43,10 @@ router.use(express.static(path.resolve(__dirname, 'client')));
 router.get('/blink/:id', function(req, res){
    var blinkName = req.params.id;
    
-   client.get(blinkName, function(err, resp){
-      res.send(JSON.parse(resp)); 
+   client.hget("reese", "blinks", function(err, data){
+        var blinks = JSON.parse(data);
+        var resp = blinks[blinkName];
+        res.send(resp); 
    });
 });
 
@@ -66,10 +68,10 @@ io.on('connection', function(socket) {
         socket.emit('message', data);
     });
 
-    client.keys('*', function (err, keys) {
+    client.hget("reese", "blinks", function (err, data) {
       if (err) return console.log(err);
     
-        socket.emit('blinkNames', keys);
+        socket.emit('blinkNames', JSON.parse(data));
     });
     
     sockets.push(socket);
@@ -102,7 +104,12 @@ io.on('connection', function(socket) {
     });
 
     socket.on('saveFrames', function(blink) {
-        client.set(blink.name, JSON.stringify(blink.frames));
+        client.hdel("reese", "blinks");
+        client.hget("reese", "blinks", function(err, data){
+            var blinks = data || {};
+            blinks[blink.name] = blink.frames;
+            client.hset("reese", "blinks", JSON.stringify(blinks));
+        });
     });
 
     socket.on('sendFrames', function(frames) {
