@@ -194,14 +194,17 @@ function broadcast(event, data) {
 }
 
 function mentionReceived(mention, timestamp){
-    mentionTime = moment(timestamp);
-    minute = mentionTime.minute();
+    var mentionTime = moment(timestamp);
+    var minute = mentionTime.minute();
 
-    var currmention = watchList.symbols[mention][minute]
-    currmention.count++;
-    currmention.timestamp = mentionTime;
+    var lastMention = watchList.symbols[mention][minute]
+    var diff = Math.abs(mentionTime - lastMention.timestamp);
+    var lastMentionInSameMinute = (diff <= 60000);
 
-    watchList[minute].count++;
+    lastMention.count = (lastMentionInSameMinute) ? lastMention.count + 1 : 1;
+    lastMention.timestamp = mentionTime;
+
+    watchList[minute].count = (lastMentionInSameMinute) ? watchList[minute].count + 1 : 1;
     watchList[minute].timestamp = mentionTime;
 }
 
@@ -212,14 +215,14 @@ server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() 
 
 function startTwitterStream(watchSymbols, notifyCallback) {
 
-    for (var i = 1; i <= 60; i++){
+    for (var i = 0; i < 60; i++){
         watchList[i] = {count: 0, lastUpdated: moment()};
     }
 
     //Set the watch symbols to zero.
     _.each(watchSymbols, function(v) {
         watchList.symbols[v] = {};
-        for (var i = 1; i <= 60; i++){
+        for (var i = 0; i < 60; i++){
             watchList.symbols[v][i] = {count: 0, lastUpdated: moment()};
         }
     });
