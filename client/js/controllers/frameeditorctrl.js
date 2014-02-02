@@ -36,16 +36,12 @@ function FrameEditorController($scope, $resource, socket) {
         $scope.blinkState = 'pristine';
     }
     
-    var BlinkName = $resource('/blinkname');
+    var Blink = $resource('/blink/:user/:id', {id:'@id'}, {'get': {method: 'GET', isArray: true}});
     
-    var Blink = $resource('/blink/:id', {}, {
-            'get': {method: 'GET', isArray: true}
-        });
-    
-    $scope.blinkNames = BlinkName.query();
+    $scope.blinkNames = Blink.query({user: 'reese'});
 
     $scope.load = function(blinkName){
-        var blink = Blink.get({id:blinkName});
+        var blink = Blink.get({user: 'reese', id:blinkName});
         blink.$promise.then(function(data){
             $scope.blinkName = blinkName;
             $scope.frames = data;

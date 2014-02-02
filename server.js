@@ -13,6 +13,13 @@ var twitter = require('ntwitter');
 var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
+var moment = require('moment');
+
+//This structure will keep the total number of tweets received and a map of all the symbols and how many tweets received of that symbol
+var watchList = {
+    total: 0,
+    symbols: {}
+};
 
 var client;
 
@@ -20,7 +27,7 @@ if (process.env.REDISTOGO_URL){
     client = require('redis-url').connect(process.env.REDISTOGO_URL);
 } else {
     var redis = require('redis');
-    client = redis.createClient(16379, process.env.IP);
+    client = redis.createClient(6379, process.env.IP);
 }
 
 client.on("error", function (err) {
@@ -40,23 +47,26 @@ var io = socketio.listen(server);
 
 router.use(express.static(path.resolve(__dirname, 'client')));
 
-router.get('/blinkname', function(req, res){
-    client.hget("reese", "blinks", function(err, data){
+router.get('/blink/:user/:id', function(req, res){
+    var user = req.params.user;
+    var blinkName = req.params.id;
+   
+    client.hget(user, "blinks", function(err, data){
         var blinks = JSON.parse(data);
-        var resp = [];
-        for (var name in blinks)
-            {resp.push(name);}
-            
+        var resp = blinks[blinkName];
         res.send(resp); 
    });
 });
 
-router.get('/blink/:id', function(req, res){
-   var blinkName = req.params.id;
-   
-   client.hget("reese", "blinks", function(err, data){
+router.get('/blink/:user', function(req, res){
+    var user = req.params.user;
+
+    client.hget(user, "blinks", function(err, data){
         var blinks = JSON.parse(data);
-        var resp = blinks[blinkName];
+        var resp = [];
+        for (var name in blinks)
+            {resp.push({id: name});}
+            
         res.send(resp); 
    });
 });
@@ -183,25 +193,37 @@ function broadcast(event, data) {
     });
 }
 
+function mentionReceived(mention, timestamp){
+    mentionTime = moment(timestamp);
+    minute = mentionTime.minute();
+
+    var currmention = watchList.symbols[mention][minute]
+    currmention.count++;
+    currmention.timestamp = mentionTime;
+
+    watchList[minute].count++;
+    watchList[minute].timestamp = mentionTime;
+}
+
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {
     var addr = server.address();
     console.log("Chat server listening at", addr.address + ":" + addr.port);
 });
 
-function startTwitterStream() {
-    // Twitter symbols array
-    var watchSymbols = ['android'];
+function startTwitterStream(watchSymbols, notifyCallback) {
 
-    //This structure will keep the total number of tweets received and a map of all the symbols and how many tweets received of that symbol
-    var watchList = {
-        total: 0,
-        symbols: {}
-    };
+    for (var i = 1; i <= 60; i++){
+        watchList[i] = {count: 0, lastUpdated: moment()};
+    }
 
     //Set the watch symbols to zero.
     _.each(watchSymbols, function(v) {
-        watchList.symbols[v] = 0;
+        watchList.symbols[v] = {};
+        for (var i = 1; i <= 60; i++){
+            watchList.symbols[v][i] = {count: 0, lastUpdated: moment()};
+        }
     });
+
 
     //Instantiate the twitter component
     //You will need to get your own key. Don't worry, it's free. But I cannot provide you one
@@ -237,14 +259,15 @@ function startTwitterStream() {
 
                 //We're gunna do some indexOf comparisons and we want it to be case agnostic.
                 var text = tweet.text.toLowerCase();
+                var timestamp = tweet.created_at.replace(/( \+)/, ' UTC$1')
 
                 //Go through every symbol and see if it was mentioned. If so, increment its counter and
                 //set the 'claimed' variable to true to indicate something was mentioned so we can increment
                 //the 'total' counter!
                 _.each(watchSymbols, function(v) {
                     if (text.indexOf(v.toLowerCase()) !== -1) {
-                        watchList.symbols[v]++;
                         claimed = true;
+                        notifyCallback(v, timestamp);
                     }
                 });
 
@@ -252,119 +275,9 @@ function startTwitterStream() {
                 if (claimed) {
                     //Increment total
                     watchList.total++;
-                    
-                    if (watchList.total % 100 === 0)
-                        console.log(watchList.total + " hashtags received");
 
-                    //Send to all the clients
-                    //sockets.sockets.emit('data', watchList);
-                    if (watchList.total % 100 === 0) {
-                        var frames = [{
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "on",
-                            "red": "on",
-                            "blue": "on",
-                            "time": 0.1
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "on",
-                            "red": "on",
-                            "blue": "off",
-                            "time": 0.2
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "on",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.3
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "off",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.4
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "off",
-                            "yellow": "off",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.5
-                        }, {
-                            "purple": "on",
-                            "pink": "off",
-                            "white": "off",
-                            "yellow": "off",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.6
-                        }, {
-                            "purple": "off",
-                            "pink": "off",
-                            "white": "off",
-                            "yellow": "off",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.7
-                        }, {
-                            "purple": "on",
-                            "pink": "off",
-                            "white": "off",
-                            "yellow": "off",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.6
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "off",
-                            "yellow": "off",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.5
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "off",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.4
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "on",
-                            "red": "off",
-                            "blue": "off",
-                            "time": 0.3
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "on",
-                            "red": "on",
-                            "blue": "off",
-                            "time": 0.2
-                        }, {
-                            "purple": "on",
-                            "pink": "on",
-                            "white": "on",
-                            "yellow": "on",
-                            "red": "on",
-                            "blue": "on",
-                            "time": 0.1
-                        }];
-                        sendFrames(frames);
+                    if (watchList.total%100 === 0){
+                        console.log(JSON.stringify(watchList));
                     }
                 }
             }
@@ -372,4 +285,5 @@ function startTwitterStream() {
     });
 }
 
-//startTwitterStream();
+//client.hset("reese", "twitter", JSON.stringify({hashtags: ["reesepower", "teamreese"]}));
+startTwitterStream(["reesepower", "teamreese", "android"], mentionReceived);
