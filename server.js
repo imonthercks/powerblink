@@ -40,6 +40,17 @@ var io = socketio.listen(server);
 
 router.use(express.static(path.resolve(__dirname, 'client')));
 
+router.get('/blinkname', function(req, res){
+    client.hget("reese", "blinks", function(err, data){
+        var blinks = JSON.parse(data);
+        var resp = [];
+        for (var name in blinks)
+            {resp.push(name);}
+            
+        res.send(resp); 
+   });
+});
+
 router.get('/blink/:id', function(req, res){
    var blinkName = req.params.id;
    

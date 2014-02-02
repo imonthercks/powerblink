@@ -36,8 +36,14 @@ function FrameEditorController($scope, $resource, socket) {
         $scope.blinkState = 'pristine';
     }
     
-    var Blink = $resource('/blink/:id', {}, {'get': {method: 'GET', isArray: true}});
-        
+    var BlinkName = $resource('/blinkname');
+    
+    var Blink = $resource('/blink/:id', {}, {
+            'get': {method: 'GET', isArray: true}
+        });
+    
+    $scope.blinkNames = BlinkName.query();
+
     $scope.load = function(blinkName){
         var blink = Blink.get({id:blinkName});
         blink.$promise.then(function(data){
@@ -74,8 +80,9 @@ function FrameEditorController($scope, $resource, socket) {
         $scope.blinkState = 'dirty';    
     }
     
-    socket.on('blinkNames', function (blinkNames) {
+    
+    /*socket.on('blinkNames', function (blinkNames) {
           //_.each(blinkNames, function(item){console.log(item);});
           $scope.blinkNames = blinkNames;
-        });
+        });*/
 } 
