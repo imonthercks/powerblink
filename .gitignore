@@ -1,3 +1,5 @@
 # Ignore mongo data files
 data/
 data.replica*/
+
+*.sublime-*
