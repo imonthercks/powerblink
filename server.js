@@ -233,10 +233,10 @@ function startTwitterStream(watchSymbols, notifyCallback) {
     //since it will instantiate a connection on my behalf and will drop all other streaming connections.
     //Check out: https://dev.twitter.com/
     var t = new twitter({
-        consumer_key: 'w7SoGcpmbtV1h51MocTWDQ', // <--- FILL ME IN
-        consumer_secret: 'Dd4AKiNmg3X4PmcgiUswPb0ey0Zm076I5FBx2qPRo', // <--- FILL ME IN
-        access_token_key: '15485073-M1Z9b31zVf6wbjvOGLmwKLyMjPZS1Q4lmuKPItW3I', // <--- FILL ME IN
-        access_token_secret: 'HIleJoa9rSbHCwLW1A6Q2pCWBMNENk0p8ysWj4rDldcij' // <--- FILL ME IN
+        consumer_key: process.env.TWITTER_CONS_KEY, // <--- FILL ME IN
+        consumer_secret: process.env.TWITTER_CONS_SECRET, // <--- FILL ME IN
+        access_token_key: process.env.TWITTER_ACCESS_KEY, // <--- FILL ME IN
+        access_token_secret: process.env.TWITTER_ACCESS_SECRET // <--- FILL ME IN
     });
     console.log("Twitter client created");
 

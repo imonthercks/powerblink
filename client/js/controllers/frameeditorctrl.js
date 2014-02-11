@@ -27,9 +27,6 @@ function FrameEditorController($scope, $resource, socket) {
         $scope.frames = [{purple: "off", pink: "off", white: "off", yellow: "off", red: "off", blue: "off", time: 1}];
     }
     
-    $scope.save = function(){
-    }
-    
     $scope.persist = function(){
         socket.emit('saveFrames', {name: $scope.blinkName, frames: $scope.frames});
         $scope.blinkNames.push($scope.blinkName);
